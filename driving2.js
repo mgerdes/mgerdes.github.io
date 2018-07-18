@@ -82,7 +82,6 @@ var Obstacle = function(position, radius) {
 
 var obstacles = [];
 
-/*	
 for (var i = 0; i < 5; i++) {
 	obstacles.push(new Obstacle({x: 5.0, y: (i - 2) * 5.0}, 1.0));
 	obstacles.push(new Obstacle({x: -5.0, y: (i - 2) * 5.0}, 1.0));
@@ -94,7 +93,6 @@ obstacles.push(new Obstacle({x: 0.0, y: 3.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: 8.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: -3.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: -8.0}, 1.0));
-*/
 
 var Car = function() {
 	var me = this;
@@ -436,17 +434,40 @@ for (var i = 0; i < 0; i++) {
 var time_since_collision = 0;
 var last_render = 0;
 var time_since_collision_div = document.getElementById('timesincecollision');
+var speed_input = document.getElementById('speed');
+var randomness_input = document.getElementById('randomness');
+var clear_obstacles_button = document.getElementById('clearobstacles');
+
+var epsilon = 0.0;
+var speed = 10;
+
+randomness_input.value = epsilon.toFixed(1);
+speed_input.value = speed;
+
+randomness_input.onchange = function(e) {
+	var val = Number.parseFloat(randomness_input.value);
+	epsilon = val;
+};
+
+speed_input.onchange = function(e) {
+	var val = Number.parseFloat(speed_input.value);
+	speed = val;
+};
+
+clear_obstacles_button.onclick = function(e) {
+	obstacles.length = 0;
+};
 
 var loop = function(timestamp) {
 	var progress = timestamp - last_render;
 	last_render = timestamp;
 	
-	for (var times = 0; times < 8; times++) {
+	for (var times = 0; times < speed; times++) {
 		do_action(action);
 		car.update(0.016);
 
 		var state_and_reward_next = get_state_and_reward();
-		var action_next = get_action(state_and_reward_next.state, 0.1);
+		var action_next = get_action(state_and_reward_next.state, epsilon);
 		update_value(state_and_reward.state, 
 						action, 
 						state_and_reward_next.state, 
@@ -461,7 +482,7 @@ var loop = function(timestamp) {
 		}
 	}
 	
-	time_since_collision += progress;
+	time_since_collision += speed * progress;
 	time_since_collision_div.innerHTML = "Time since collision: " + (time_since_collision / 1000.0).toFixed(1);
 		
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
