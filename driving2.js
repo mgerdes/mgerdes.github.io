@@ -81,7 +81,8 @@ var Obstacle = function(position, radius) {
 };
 
 var obstacles = [];
-	
+
+/*	
 for (var i = 0; i < 5; i++) {
 	obstacles.push(new Obstacle({x: 5.0, y: (i - 2) * 5.0}, 1.0));
 	obstacles.push(new Obstacle({x: -5.0, y: (i - 2) * 5.0}, 1.0));
@@ -93,6 +94,7 @@ obstacles.push(new Obstacle({x: 0.0, y: 3.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: 8.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: -3.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: -8.0}, 1.0));
+*/
 
 var Car = function() {
 	var me = this;
@@ -392,14 +394,11 @@ document.addEventListener('keyup', (event) => {
 });
 */
 
-/*
 canvas.onclick = function(e) {
 	var x = e.offsetX / canvas.width * 20 - 10;
 	var y = (canvas.width - e.offsetY) / canvas.width * 20 - 10;
 	obstacles.push(new Obstacle({x: x, y: y}, 1.0));
-	console.log(x, y);
 };
-*/
 
 var do_action = function(action) {
 	var TURN_A = 2.0;
@@ -416,14 +415,14 @@ var do_action = function(action) {
 };
 
 var state_and_reward = get_state_and_reward();	
-var action = get_action(state_and_reward.state, 0.0);
+var action = get_action(state_and_reward.state, 0.1);
 
 for (var i = 0; i < 0; i++) {
 	do_action(action);
 	car.update(0.016);
 
 	var state_and_reward_next = get_state_and_reward();
-	var action_next = get_action(state_and_reward_next.state, 0.0);
+	var action_next = get_action(state_and_reward_next.state, 0.1);
 	update_value(state_and_reward.state, 
 					action, 
 					state_and_reward_next.state, 
@@ -434,13 +433,20 @@ for (var i = 0; i < 0; i++) {
 	action = action_next;
 }
 
+var time_since_collision = 0;
+var last_render = 0;
+var time_since_collision_div = document.getElementById('timesincecollision');
+
 var loop = function(timestamp) {
+	var progress = timestamp - last_render;
+	last_render = timestamp;
+	
 	for (var times = 0; times < 8; times++) {
 		do_action(action);
 		car.update(0.016);
 
 		var state_and_reward_next = get_state_and_reward();
-		var action_next = get_action(state_and_reward_next.state, 0.0);
+		var action_next = get_action(state_and_reward_next.state, 0.1);
 		update_value(state_and_reward.state, 
 						action, 
 						state_and_reward_next.state, 
@@ -449,14 +455,21 @@ var loop = function(timestamp) {
 
 		state_and_reward = state_and_reward_next;
 		action = action_next;
+		
+		if (car.did_collide) {
+			time_since_collision = 0;
+		}
 	}
+	
+	time_since_collision += progress;
+	time_since_collision_div.innerHTML = "Time since collision: " + (time_since_collision / 1000.0).toFixed(1);
 		
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	car.draw();
 	for (var i = 0; i < obstacles.length; i++) {
 		obstacles[i].draw();
 	}
-	
+		
 	window.requestAnimationFrame(loop);
 };
 
