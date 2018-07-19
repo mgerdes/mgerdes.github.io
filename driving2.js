@@ -287,9 +287,9 @@ var get_state_and_reward = function() {
 	}
 	
 	if (car.did_collide) {
-		reward -= 5000.0;
+		reward -= 500.0;
 	} else {
-		reward += 10.0;
+		reward += 5.0;
 	}
 			
 	var state = 0;
@@ -458,6 +458,8 @@ clear_obstacles_button.onclick = function(e) {
 	obstacles.length = 0;
 };
 
+var episode_ended = false;
+
 var loop = function(timestamp) {
 	var progress = timestamp - last_render;
 	last_render = timestamp;
@@ -468,16 +470,22 @@ var loop = function(timestamp) {
 
 		var state_and_reward_next = get_state_and_reward();
 		var action_next = get_action(state_and_reward_next.state, epsilon);
-		update_value(state_and_reward.state, 
-						action, 
-						state_and_reward_next.state, 
-						action_next,
-						state_and_reward_next.reward);				
+		
+		if (episode_ended) {
+			episode_ended = false;
+		} else {
+			update_value(state_and_reward.state, 
+							action, 
+							state_and_reward_next.state, 
+							action_next,
+							state_and_reward_next.reward);			
+		}						
 
 		state_and_reward = state_and_reward_next;
 		action = action_next;
 		
 		if (car.did_collide) {
+			episode_ended = true;
 			time_since_collision = 0;
 		}
 	}
