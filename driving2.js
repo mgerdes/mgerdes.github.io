@@ -175,7 +175,7 @@ var Obstacle = function(position, radius) {
 		i = Math.floor(Math.random() * 9);
 	}
 
-    var model = stoneSmallModels[i].clone();
+    var model = stoneSmallModels[5].clone();
     model.position.x = position.x;
     model.position.y = position.y;
     model.scale.x = radius * 0.6;
