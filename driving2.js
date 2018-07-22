@@ -1,66 +1,105 @@
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.autoClear = false;
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(1280, 720);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
 document.body.appendChild(renderer.domElement);
 
 var carPathScene = new THREE.Scene();
 var carPathCamera =
-    new THREE.OrthographicCamera(-10.0, 10.0, 10.0, -10.0, -10.0, 10.0);
+    new THREE.OrthographicCamera(-20.0, 20.0, 10.0, -10.0, -10.0, 10.0);
 var carPathTexture = new THREE.WebGLRenderTarget(
-    1024.0, 1024.0,
+    2048.0, 1024.0,
     {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
 
 var emptyScene = new THREE.Scene();
 
-var screenScene = new THREE.Scene();
-var screenCamera = new THREE.OrthographicCamera(
-    -window.innerWidth / 2.0, window.innerWidth / 2.0, window.innerHeight / 2.0,
-    -window.innerHeight / 2.0, -10.0, 10.0);
-{
-    var geometry =
-        new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
-    var material = new THREE.MeshBasicMaterial(
-        {map: carPathTexture, side: THREE.DoubleSide});
-    var plane = new THREE.Mesh(geometry, material);
-    screenScene.add(plane);
-}
-
 var mtlLoader = new THREE.MTLLoader();
-var carMaterials = mtlLoader.parse(carMtlString);
-var rock1Materials = mtlLoader.parse(rock1MTLString);
-var cliffBrownCornerMaterials = mtlLoader.parse(cliffBrownCornerMTLString);
-var cliffBrownMaterials = mtlLoader.parse(cliffBrownMTLString);
-var grassMaterials = mtlLoader.parse(grassMTLString);
 
 var objLoader = new THREE.OBJLoader();
 
+var loadModel = function(name, castShadow, receiveShadow) {
+	var materials = mtlLoader.parse(mtlStrings[name]);
+	objLoader.setMaterials(materials);
+	var model = objLoader.parse(objStrings[name]);
+	for (var i = 0; i < model.children.length; i++) {
+		model.children[i].geometry.rotateX(0.5 * Math.PI);
+		model.children[i].geometry.rotateZ(-0.5 * Math.PI);
+		model.children[i].castShadow = castShadow;
+		model.children[i].receiveShadow = receiveShadow;
+	}
+	model.castShadow = castShadow;
+	model.receiveShadow = receiveShadow;
+	model.scale.x = 0.2;
+	model.scale.y = 0.2;
+	model.scale.z = 0.2;
+	model.side = THREE.DoubleSide;
+	return model;
+};
+
+var rock1Model = loadModel('rock1', true, true);
+var rockSmallModel = loadModel('rockSmall', true, true);
+var carModel = loadModel('car', true, true);
+var cliffModel = loadModel('cliffBrown', true, true);
+var grassModel = loadModel('grass', true, true);
+var cliffBrownTopModel = loadModel('cliffBrownTop', false, true);
+var cliffBrownWaterfallTopModel = loadModel('cliffBrownWaterfallTop', false, true);
+var cliffBrownCornerTopModel = loadModel('cliffBrownCornerTop', false, true);
+var cliffBrownCornerInnerTopModel = loadModel('cliffBrownCornerInnerTop', false, true);
+var groundDirtModel = loadModel('groundDirt', true, true);
+var groundDirtRiverModel = loadModel('groundDirtRiver', true, true);
+var groundDirtRiverCornerModel = loadModel('groundDirtRiverCorner', true, true);
+var fenceModel = loadModel('fence', true, true);
+
+var stoneSmallModels = [];
+for (var i = 1; i < 10; i++) {
+	var str = 'stoneSmall' + i;
+	stoneSmallModels[i - 1] = loadModel(str, true, true);
+}
+
 var scene = new THREE.Scene();
 
-var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+var ambientLight = new THREE.AmbientLight(0x555555);
 scene.add(ambientLight);
 
-var directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight1.position.set(0.0, 100.0, 100.0);
+var shadowLight = new THREE.DirectionalLight(0xffffff, 0.1);
+shadowLight.position.set(10.0, -10.0, 15.0);
+shadowLight.castShadow = true;
+shadowLight.shadow.camera.near = 1.0;
+shadowLight.shadow.camera.far = 50.0;
+shadowLight.shadow.camera.right = 30.0;
+shadowLight.shadow.camera.left = -30.0;
+shadowLight.shadow.camera.top = 30.0;
+shadowLight.shadow.camera.bottom = -30.0;
+shadowLight.shadow.mapSize.width = 2048;
+shadowLight.shadow.mapSize.height = 2048;
+scene.add(shadowLight);
+
+var directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4);
+directionalLight1.position.set(-10.0, 200.0, 115.0);
 directionalLight1.target.position.set(0.0, 0.0, 0.0);
 scene.add(directionalLight1);
 
-var directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight2.position.set(0.0, -100.0, 100.0);
+var directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+directionalLight2.position.set(10.0, -200.0, 115.0);
 directionalLight2.target.position.set(0.0, 0.0, 0.0);
 scene.add(directionalLight2);
 
 var camera = new THREE.PerspectiveCamera(
-    75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.y = -10.0;
+    75, 1280 / 720, 0.1, 1000);
+camera.position.y = 10.0;
 camera.position.z = 20.0;
-camera.lookAt(0.0, 0.0, 0.0);
+camera.up.x = 0.0;
+camera.up.y = 0.0;
+camera.up.z = 1.0;
+camera.lookAt(0.0, 2.7, 0.0);
 camera.updateProjectionMatrix();
 
 var NUM_SENSORS = 20;
 var DIST_1 = 5.0;
 var DIST_2 = 2.5;
-var N0 = 5;
-var N1 = 4;
+var N0 = 2;
+var N1 = 2;
 
 var rotate_point = function(pt, theta) {
     var pt_p = {x: 0, y: 0};
@@ -130,19 +169,21 @@ var Obstacle = function(position, radius) {
     cylinder.position.x = position.x;
     cylinder.position.y = position.y;
     // scene.add(cylinder);
+	
+	var i = Math.floor(Math.random() * 9);
+	while (i == 6 || i == 7) {
+		i = Math.floor(Math.random() * 9);
+	}
 
-    objLoader.setMaterials(rock1Materials);
-    var model = objLoader.parse(rockSmallOBJString);
-    for (var i = 0; i < model.children.length; i++) {
-        model.children[i].geometry.rotateX(0.5 * Math.PI);
-        model.children[i].geometry.rotateZ(-0.5 * Math.PI);
-    }
+    var model = stoneSmallModels[i].clone();
     model.position.x = position.x;
     model.position.y = position.y;
-    model.scale.x = radius * 0.3;
-    model.scale.y = radius * 0.3;
-    model.scale.z = radius * 0.3;
+    model.scale.x = radius * 0.6;
+    model.scale.y = radius * 0.6;
+    model.scale.z = radius * 0.6;
     model.rotateZ(Math.random() * 2.0 * Math.PI);
+	model.castShadow = true;
+	model.receiveShadow = true;
     scene.add(model);
 };
 
@@ -151,10 +192,24 @@ var obstacles = [];
 for (var i = 1; i < 4; i++) {
     obstacles.push(new Obstacle({x: 5.0, y: (i - 2) * 5.0}, 1.0));
     obstacles.push(new Obstacle({x: -5.0, y: (i - 2) * 5.0}, 1.0));
+    obstacles.push(new Obstacle({x: 15.0, y: (i - 2) * 5.0}, 1.0));
+    obstacles.push(new Obstacle({x: -15.0, y: (i - 2) * 5.0}, 1.0));
 }
 
 obstacles.push(new Obstacle({x: 0.0, y: 3.0}, 1.0));
 obstacles.push(new Obstacle({x: 0.0, y: -3.0}, 1.0));
+obstacles.push(new Obstacle({x: 0.0, y: 8.0}, 1.0));
+obstacles.push(new Obstacle({x: 0.0, y: -8.0}, 1.0));
+
+obstacles.push(new Obstacle({x: 10.0, y: 3.0}, 1.0));
+obstacles.push(new Obstacle({x: 10.0, y: -3.0}, 1.0));
+obstacles.push(new Obstacle({x: 10.0, y: 8.0}, 1.0));
+obstacles.push(new Obstacle({x: 10.0, y: -8.0}, 1.0));
+
+obstacles.push(new Obstacle({x: -10.0, y: 3.0}, 1.0));
+obstacles.push(new Obstacle({x: -10.0, y: -3.0}, 1.0));
+obstacles.push(new Obstacle({x: -10.0, y: 8.0}, 1.0));
+obstacles.push(new Obstacle({x: -10.0, y: -8.0}, 1.0));
 
 var Car = function() {
     var me = this;
@@ -171,16 +226,15 @@ var Car = function() {
         me.sensors[i] = DIST_1;
     }
 
-    objLoader.setMaterials(carMaterials);
-    var model = objLoader.parse(carObjString);
+    var model = carModel.clone();
     for (var i = 0; i < model.children.length; i++) {
-        model.children[i].geometry.rotateX(0.5 * Math.PI);
-        model.children[i].geometry.rotateZ(-0.5 * Math.PI);
-        model.children[i].scale.x = 0.1;
-        model.children[i].scale.y = 0.1;
-        model.children[i].scale.z = 0.1;
+        model.children[i].scale.x = 0.4;
+        model.children[i].scale.y = 0.4;
+        model.children[i].scale.z = 0.4;
         model.children[i].position.x = -0.2;
     }
+	model.castShadow = true;
+	model.receiveShadow = true;
 
     var carPathGeometry = new THREE.BoxGeometry(2.3, 1.3, 1.0);
     var carPathMaterial = new THREE.MeshBasicMaterial({color: 0x888888});
@@ -224,10 +278,15 @@ var Car = function() {
 
         if (me.did_collide) {
             me.did_collide = false;
+			
             me.position.x = 0.0;
             me.position.y = 0.0;
             me.heading = 0.0;
             me.tire_heading = 0.0;
+			
+			me.position.x = -20.0 + 40.0 * Math.random();
+			me.position.y = -10.0 + 20.0 * Math.random();
+			me.heading = 2.0 * Math.PI * Math.random();
         }
 
         me.tire_heading = 0.5 * me.stear_direction;
@@ -260,8 +319,8 @@ var Car = function() {
 
         var car_pts = me.get_points();
         for (var i = 0; i < 4; i++) {
-            if (car_pts[i].x < -10.0 || car_pts[i].y < -10.0 ||
-                car_pts[i].x > 10.0 || car_pts[i].y > 10.0) {
+            if (car_pts[i].x < -20.0 || car_pts[i].y < -10.0 ||
+                car_pts[i].x > 20.0 || car_pts[i].y > 10.0) {
                 me.did_collide = true;
             }
         }
@@ -297,12 +356,12 @@ var Car = function() {
             var rd = {x: Math.cos(theta), y: Math.sin(theta)};
 
             if (rd.x != 0.0) {
-                var dist1 = (-10.0 - ro.x) / rd.x;
+                var dist1 = (-20.0 - ro.x) / rd.x;
                 if (dist1 > 0.0 && dist1 < me.sensors[i]) {
                     me.sensors[i] = dist1;
                 }
 
-                var dist2 = (10.0 - ro.x) / rd.x;
+                var dist2 = (20.0 - ro.x) / rd.x;
                 if (dist2 > 0.0 && dist2 < me.sensors[i]) {
                     me.sensors[i] = dist2;
                 }
@@ -393,14 +452,14 @@ var get_state_and_reward = function() {
             state += 1;
         }
     }
-    // state *= 20;
-    // state += 20 * Math.floor((car.tire_heading + 2.0) / 4.0);
+    //state *= 20;
+    //state += 20 * Math.floor((car.tire_heading + 2.0) / 4.0);
 
     return {state: state, reward: reward};
 };
 
 var Q = [];
-for (var i = 0; i < 3 * (1 << (N0 + N1)); i++) {
+for (var i = 0; i < 3 * (1 << ((NUM_SENSORS / N0) + (NUM_SENSORS / N1))); i++) {
     Q[i] = 0.0;
 }
 
@@ -441,158 +500,313 @@ var do_action = function(action) {
     }
 };
 
-/*
-var time_since_collision = 0;
-var time_since_collision_div = document.getElementById('timesincecollision');
-var speed_input = document.getElementById('speed');
-var randomness_input = document.getElementById('randomness');
-var clear_obstacles_button = document.getElementById('clearobstacles');
-
-randomness_input.value = epsilon.toFixed(1);
-speed_input.value = speed;
-
-randomness_input.onchange = function(e) {
-    var val = Number.parseFloat(randomness_input.value);
-    epsilon = val;
-};
-
-speed_input.onchange = function(e) {
-    var val = Number.parseFloat(speed_input.value);
-    speed = val;
-};
-
-clear_obstacles_button.onclick = function(e) {
-    obstacles.length = 0;
-};
-*/
-
-var episode_ended = false;
-var state_and_reward = get_state_and_reward();
-var action = get_action(state_and_reward.state, 0.1);
-var speed = 2;
-var epsilon = 0.0;
-
-var cliffModel = null;
-{
-    objLoader.setMaterials(cliffBrownMaterials);
-    cliffModel = objLoader.parse(cliffBrownOBJString);
-    for (var i = 0; i < cliffModel.children.length; i++) {
-        cliffModel.children[i].geometry.rotateX(0.5 * Math.PI);
-        cliffModel.children[i].geometry.rotateZ(-0.5 * Math.PI);
-    }
-    cliffModel.scale.x = 0.4;
-    cliffModel.scale.y = 0.4;
-    cliffModel.scale.z = 0.4;
-}
-
-var grassModel = null;
-{
-    objLoader.setMaterials(grassMaterials);
-    grassModel = objLoader.parse(grassOBJString);
-    for (var i = 0; i < grassModel.children.length; i++) {
-        grassModel.children[i].geometry.rotateX(0.5 * Math.PI);
-        grassModel.children[i].geometry.rotateZ(-0.5 * Math.PI);
-    }
-    grassModel.scale.x = 0.25;
-    grassModel.scale.y = 0.25;
-    grassModel.scale.z = 0.25;
-}
-
-for (var i = 0; i < 50; i++) {
+var grassModels = [];
+for (var i = 0; i < 200; i++) {
     var model = grassModel.clone();
-    model.position.x = -9.5 + 19.0 * Math.random();
-    model.position.y = -9.5 + 19.0 * Math.random();
+    model.position.x = -11.0 + 22.0 * Math.random();
+    model.position.y = -11.0 + 22.0 * Math.random();
+	model.scale.x = 0.5;
+	model.scale.y = 0.5;
+	model.scale.z = 0.5;
     model.rotateZ(Math.random() * 2.0 * Math.PI);
-    // scene.add(model);
+    //scene.add(model);
+	grassModels.push(model);
 }
 
-/*
-for (var i = 0; i < 6; i++) {
-    var model = cliffModel.clone();
-    model.position.x = -13.0;
-    model.position.y = -8.0 + 4 * i;
-    scene.add(model);
+for (var i = 0; i < 10; i++) {
+	var model = null;
+
+	// RIGHT
+	if (i == 6) {
+		model = groundDirtRiverModel.clone();
+		model.rotateOnWorldAxis(new THREE.Vector3(0.0, 0.0, 1.0), -0.5 * Math.PI);
+	} else if (i == 5 || i == 7) {
+		model = groundDirtRiverCornerModel.clone();
+		model.rotateOnWorldAxis(new THREE.Vector3(0.0, 0.0, 1.0), -0.5 * Math.PI);
+	} else {
+		model = groundDirtModel.clone();
+	}	
+	model.position.x = 20.0;
+	model.position.y = -8.0 + 2.0 * i;
+	model.position.z = -0.5;
+	if (i == 5 || i == 6 || i == 7) {
+		model.position.x += 2.0;
+	}
+	if (i == 7) {
+		model.position.y -= 2.0;
+		model.rotateOnWorldAxis(new THREE.Vector3(0.0, 0.0, 1.0), -0.5 * Math.PI);
+	}
+	scene.add(model);
+	
+	// LEFT
+	model = groundDirtModel.clone();
+	model.position.x = -22.0;
+	model.position.y = -8.0 + 2.0 * i;
+	model.position.z = -0.5;
+	scene.add(model);
 }
 
-for (var i = 0; i < 6; i++) {
-    var model = cliffModel.clone();
-    model.rotateZ(Math.PI);
-    model.position.x = 13.0;
-    model.position.y = -12.0 + 4 * i;
-    scene.add(model);
+for (var i = 0; i < 20; i++) {
+	// TOP
+	if (i == 8) {
+		model = groundDirtRiverModel.clone();
+	} else if (i == 7 || i == 9) {
+		model = groundDirtRiverCornerModel.clone();
+	} else {
+		model = groundDirtModel.clone();
+	}
+	model.position.x = -20.0 + 2.0 * i;
+	model.position.y = 12.0;
+	model.position.z = -0.5;
+	if (i == 7) {
+		model.position.x += 2.0;
+		model.rotateOnWorldAxis(new THREE.Vector3(0.0, 0.0, 1.0), -0.5 * Math.PI);
+	}
+	scene.add(model);
+	
+	// BOTTOM
+	model = groundDirtModel.clone();
+	model.position.x = -20.0 + 2.0 * i;
+	model.position.y = -10.0;
+	model.position.z = -0.5;
+	scene.add(model);
 }
 
-for (var i = 0; i < 6; i++) {
-    var model = cliffModel.clone();
-    model.position.x = -12.0 + 4 * i;
-    model.position.y = -13.0;
-    model.rotateZ(0.5 * Math.PI);
-    scene.add(model);
+for (var i = 0; i < 10; i++) {
+	var model = null;
+	
+	// RIGHT
+	if (i == 6) {
+		model = cliffBrownWaterfallTopModel.clone();
+		model.position.x = 22.0;
+		model.position.y = -10.0 + 2.0 * i;
+		model.rotateZ(Math.PI);
+		scene.add(model);
+	} else {
+		model = cliffBrownTopModel.clone();
+		model.position.x = 22.0;
+		model.position.y = -10.0 + 2.0 * i;
+		model.rotateZ(Math.PI);
+		scene.add(model);
+	}
+	
+	// LEFT
+	model = cliffBrownTopModel.clone();
+	model.position.x = -22.0;
+	model.position.y = -8.0 + 2.0 * i;
+	model.rotateZ(0.0);
+	scene.add(model);
 }
 
-for (var i = 0; i < 6; i++) {
-    var model = cliffModel.clone();
-    model.position.x = -8.0 + 4 * i;
-    model.position.y = 13.0;
-    model.rotateZ(-0.5 * Math.PI);
-    scene.add(model);
+for (var i = 0; i < 20; i++) {
+	// TOP
+	if (i == 8) {
+		model = cliffBrownWaterfallTopModel.clone();
+		model.position.x = -18.0 + 2.0 * i;
+		model.position.y = 12.0;
+		model.rotateZ(-0.5 * Math.PI);
+		scene.add(model);
+	} else {
+		model = cliffBrownTopModel.clone();
+		model.position.x = -18.0 + 2.0 * i;
+		model.position.y = 12.0;
+		model.rotateZ(-0.5 * Math.PI);
+		scene.add(model);
+	}
+	
+	// BOTTOM
+	model = cliffBrownTopModel.clone();
+	model.position.x = -20.0 + 2.0 * i;
+	model.position.y = -12.0;
+	model.rotateZ(0.5 * Math.PI);
+	scene.add(model);
 }
-*/
 
-/*
 {
-    var geometry = new THREE.BoxGeometry(20.0, 0.5, 0.5);
-    var material = new THREE.MeshLambertMaterial(
-        {color: 0x00ff00, opacity: 0.7, transparent: false});
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.y = 10.0;
-    scene.add(cube);
+	var model = null;
+	
+	model = cliffBrownCornerInnerTopModel.clone();
+	model.position.x = -22.0;
+	model.position.y = 12.0;
+	scene.add(model);
+	
+	model = groundDirtModel.clone();
+	model.position.x = -22.0;
+	model.position.y = 12.0;
+	model.position.z = -0.5;
+	scene.add(model);
+	
+	model = cliffBrownCornerInnerTopModel.clone();
+	model.position.x = 22.0;
+	model.position.y = 12.0;
+	model.rotateZ(-0.5 * Math.PI);
+	scene.add(model);
+	
+	model = groundDirtModel.clone();
+	model.position.x = 20.0;
+	model.position.y = 12.0;
+	model.position.z = -0.5;
+	scene.add(model);
+	
+	model = cliffBrownCornerInnerTopModel.clone();
+	model.position.x = -22.0;
+	model.position.y = -12.0;
+	model.rotateZ(0.5 * Math.PI);
+	scene.add(model);
+	
+	model = groundDirtModel.clone();
+	model.position.x = -22.0;
+	model.position.y = -10.0;
+	model.position.z = -0.5;
+	scene.add(model);
+	
+	model = cliffBrownCornerInnerTopModel.clone();
+	model.position.x = 22.0;
+	model.position.y = -12.0;
+	model.rotateZ(Math.PI);
+	scene.add(model);
+	
+	model = groundDirtModel.clone();
+	model.position.x = 20.0;
+	model.position.y = -10.0;
+	model.position.z = -0.5;
+	scene.add(model);
+}
+
+for (var i = 0; i < 13; i++) {
+	var model = null;
+	
+	// RIGHT
+	if (i > 8) {
+		model = groundDirtRiverModel.clone();
+		model.rotateZ(0.5 * Math.PI);
+		model.position.y -= 2.0;
+	} else if (i == 8) {
+		model = groundDirtRiverCornerModel.clone();
+	} else {
+		model = groundDirtModel.clone();
+	}
+	model.position.x += 22.0;
+	model.position.y += -12.0 + 2.0 * i;
+	model.position.z += 1.5;
+	scene.add(model);
+	
+	// LEFT
+	model = groundDirtModel.clone();
+	model.position.x += -24.0;
+	model.position.y += -10.0 + 2.0 * i;
+	model.position.z += 1.5;
+	scene.add(model);
+}
+
+for (var i = 0; i < 23; i++) {
+	// TOP
+	if (i > 9 && i < 22) {
+		model = groundDirtRiverModel.clone();
+	} else if (i == 9) {
+		model = groundDirtRiverCornerModel.clone();
+		model.rotateZ(Math.PI);
+		model.position.x += 2.0;
+		model.position.y -= 2.0;
+	} else if (i == 22) {
+		model = groundDirtRiverCornerModel.clone();
+		model.rotateZ(0.5 * Math.PI);
+		model.position.y -= 2.0;
+	} else {
+		model = groundDirtModel.clone();
+	}
+	model.position.x += -22.0 + 2.0 * i;
+	model.position.y += 14.0;
+	model.position.z += 1.5;
+	scene.add(model);
+	
+	// BOTTOM
+	model = groundDirtModel.clone();
+	model.position.x += -24.0 + 2.0 * i;
+	model.position.y -= 12.0;
+	model.position.z += 1.5;
+	scene.add(model);
+}
+
+for (var i = 0; i < 10; i++) {
+	var model = null;
+	
+	// RIGHT
+	model = fenceModel.clone();
+	model.position.x = 20.0;
+	model.position.y = -8.0 + 2.0 * i;
+	scene.add(model);
+	
+	// LEFT
+	model = fenceModel.clone();
+	model.position.x = -20.0;
+	model.position.y = -8.0 + 2.0 * i;
+	scene.add(model);
+}
+
+for (var i = 0; i < 20; i++) {
+	// TOP
+	model = fenceModel.clone();
+	model.position.x = -20.0 + 2.0 * i;
+	model.position.y = 10.0;
+	model.rotateZ(0.5 * Math.PI);
+	scene.add(model);
+	
+	// BOTTOM
+	model = fenceModel.clone();
+	model.position.x = -20.0 + 2.0 * i;
+	model.position.y = -10.0;
+	model.rotateZ(0.5 * Math.PI);
+	scene.add(model);
 }
 
 {
-    var geometry = new THREE.BoxGeometry(20.0, 0.5, 0.5);
-    var material = new THREE.MeshLambertMaterial(
-        {color: 0x00ff00, opacity: 0.7, transparent: false});
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.y = -10.0;
-    scene.add(cube);
-}
-
-{
-    var geometry = new THREE.BoxGeometry(0.5, 20.0, 0.5);
-    var material = new THREE.MeshLambertMaterial(
-        {color: 0x00ff00, opacity: 0.7, transparent: false});
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.x = 10.0;
-    scene.add(cube);
-}
-
-{
-    var geometry = new THREE.BoxGeometry(0.5, 20.0, 0.5);
-    var material = new THREE.MeshLambertMaterial(
-        {color: 0x00ff00, opacity: 0.7, transparent: false});
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.x = -10.0;
-    scene.add(cube);
-}
-*/
-
-{
-    var geometry = new THREE.PlaneGeometry(20.0, 20.0);
+    var geometry = new THREE.PlaneGeometry(40.0, 20.0);
     var material = new THREE.MeshPhongMaterial({map: carPathTexture});
+	material.specular = new THREE.Color(0.33, 0.33, 0.33);
     var ground = new THREE.Mesh(geometry, material);
+	ground.receiveShadow = true;
     scene.add(ground);
 }
 
+var raycaster = new THREE.Raycaster();
+
+window.onmouseup = function(e) {
+	var mouse = new THREE.Vector2();
+	mouse.x = ( event.clientX / 1280 ) * 2 - 1;
+	mouse.y = - ( event.clientY / 720 ) * 2 + 1;
+	
+	raycaster.setFromCamera( mouse, camera );
+	
+	var intersects = raycaster.intersectObjects( scene.children );
+	if (intersects.lengths > 0) {
+		obstacles.push(new Obstacle(intersects[0].point, 1.0));
+	}
+};
+
+var GUI = function() {
+	this.speed = 5.0;
+	this.randomness = 0.0;
+};
+
+var myGUI = new GUI();
+var gui = new dat.GUI();
+gui.add(myGUI, 'speed', 1, 1000);
+gui.add(myGUI, 'randomness', 0.0, 1.0);
+
+var episode_ended = false;
+var state_and_reward = get_state_and_reward();
+var action = get_action(state_and_reward.state, 0.0);
+
 function animate() {
-    for (var times = 0; times < speed; times++) {
+    for (var times = 0; times < myGUI.speed; times++) {
         do_action(action);
         car.update(0.016);
 
         var dont_draw = false;
 
         var state_and_reward_next = get_state_and_reward();
-        var action_next = get_action(state_and_reward_next.state, epsilon);
+        var action_next = get_action(state_and_reward_next.state, myGUI.randomness);
 
         if (episode_ended) {
             dont_draw = true;
@@ -622,7 +836,6 @@ function animate() {
 
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    // renderer.render(screenScene, screenCamera);
 }
 
 renderer.setClearColor(new THREE.Color(0.35, 0.76, 0.71), 1.0);
