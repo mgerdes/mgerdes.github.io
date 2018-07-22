@@ -282,12 +282,10 @@ mtlStrings.rock1 = `
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.cliffBrown = `
@@ -422,7 +420,6 @@ mtlStrings.cliffBrown = `
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.cliffBrownCorner = `
@@ -858,12 +855,10 @@ mtlStrings.rockSmall = `
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.grass = `
@@ -1606,7 +1601,6 @@ mtlStrings.grass = `
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.cliffBrownTop = 
@@ -1616,12 +1610,10 @@ mtlStrings.cliffBrownTop =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.cliffBrownWaterfallTop = 
@@ -1631,17 +1623,14 @@ mtlStrings.cliffBrownWaterfallTop =
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-water
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6911765 0.9578878 1 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.groundDirt = 
@@ -1651,12 +1640,10 @@ mtlStrings.groundDirt =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.groundDirtRiver = 
@@ -1666,17 +1653,14 @@ mtlStrings.groundDirtRiver =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-water
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6911765 0.9578878 1 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.groundDirtRiverCorner = 
@@ -1686,17 +1670,14 @@ mtlStrings.groundDirtRiverCorner =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-water
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6911765 0.9578878 1 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.cliffBrownCornerTop = 
@@ -1706,12 +1687,10 @@ mtlStrings.cliffBrownCornerTop =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.cliffBrownCornerInnerTop = 
@@ -1721,12 +1700,10 @@ mtlStrings.cliffBrownCornerInnerTop =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3529412 0.7686275 0.7137255 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.fence = 
@@ -1736,7 +1713,6 @@ mtlStrings.fence =
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.682353 0.4352941 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.cliffBrownTop = 
@@ -8462,37 +8438,30 @@ mtlStrings.car =
 newmtl plastic
 Ka 0.000000 0.000000 0.000000 
 Kd 0.3764706 0.3764706 0.3764706 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl paintRed
 Ka 0.000000 0.000000 0.000000 
 Kd 0.9098039 0.3333333 0.3254902 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl glass
 Ka 0.000000 0.000000 0.000000 
 Kd 0.2980392 0.3764706 0.4666667 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl frontLight
 Ka 0.000000 0.000000 0.000000 
 Kd 0.9568627 1 0.8196079 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl backLight
 Ka 0.000000 0.000000 0.000000 
 Kd 1 0.3490196 0.227451 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl wheelCover
 Ka 0.000000 0.000000 0.000000 
 Kd 0.827451 0.827451 0.827451 
-Ks 0.330000 0.330000 0.330000 
 
 newmtl carTire
 Ka 0.000000 0.000000 0.000000 
 Kd 0.4117647 0.4117647 0.4117647 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall6 = 
@@ -8690,7 +8659,6 @@ mtlStrings.stoneSmall6 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 mtlStrings.stoneSmall1 = 
@@ -8700,7 +8668,6 @@ mtlStrings.stoneSmall1 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall1 = 
@@ -8788,7 +8755,6 @@ mtlStrings.stoneSmall2 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall2 =
@@ -8903,7 +8869,6 @@ mtlStrings.stoneSmall3 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall3 =
@@ -8991,7 +8956,6 @@ mtlStrings.stoneSmall4 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall4 =
@@ -9117,7 +9081,6 @@ mtlStrings.stoneSmall5 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall5 =
@@ -9347,7 +9310,6 @@ mtlStrings.stoneSmall7 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall7 =
@@ -9456,7 +9418,6 @@ mtlStrings.stoneSmall8 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall8 = 
@@ -9627,7 +9588,6 @@ mtlStrings.stoneSmall9 =
 newmtl natureKit-stone
 Ka 0.000000 0.000000 0.000000 
 Kd 0.6588235 0.8078431 0.827451 
-Ks 0.330000 0.330000 0.330000 
 `;
 
 objStrings.stoneSmall9 = 
