@@ -803,6 +803,8 @@ var episode_ended = false;
 var state_and_reward = get_state_and_reward();
 var action = get_action(state_and_reward.state, 0.0);
 
+var groundClearColor = new THREE.Color(0.376, 0.502, 0.22);
+
 function animate() {
     for (var times = 0; times < myGUI.speed; times++) {
         do_action(action);
@@ -833,7 +835,7 @@ function animate() {
         }
 
         if (dont_draw) {
-            renderer.setClearColor(new THREE.Color(0.35, 0.76, 0.71), 1.0);
+            renderer.setClearColor(groundClearColor, 1.0);
             renderer.render(emptyScene, carPathCamera, carPathTexture, true);
         } else {
             renderer.render(carPathScene, carPathCamera, carPathTexture, false);
@@ -844,6 +846,6 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-renderer.setClearColor(new THREE.Color(0.35, 0.76, 0.71), 1.0);
+renderer.setClearColor(groundClearColor, 1.0);
 renderer.render(emptyScene, carPathCamera, carPathTexture, true);
 animate();

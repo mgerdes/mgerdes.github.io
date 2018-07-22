@@ -285,7 +285,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+# Kd 0.3529412 0.7686275 0.7137255 
 `;
 
 objStrings.cliffBrown = `
@@ -854,7 +855,8 @@ mtlStrings.rockSmall = `
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+#Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
 
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
@@ -1600,7 +1602,8 @@ mtlStrings.grass = `
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+#Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
 `;
 
 mtlStrings.cliffBrownTop = 
@@ -1613,7 +1616,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 `;
 
 mtlStrings.cliffBrownWaterfallTop = 
@@ -1622,7 +1626,8 @@ mtlStrings.cliffBrownWaterfallTop =
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 
 newmtl natureKit-wood
 Ka 0.000000 0.000000 0.000000 
@@ -1643,7 +1648,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 `;
 
 mtlStrings.groundDirtRiver = 
@@ -1656,7 +1662,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 
 newmtl natureKit-water
 Ka 0.000000 0.000000 0.000000 
@@ -1673,7 +1680,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 
 newmtl natureKit-water
 Ka 0.000000 0.000000 0.000000 
@@ -1690,7 +1698,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 `;
 
 mtlStrings.cliffBrownCornerInnerTop = 
@@ -1703,7 +1712,8 @@ Kd 1 0.682353 0.4352941
 
 newmtl natureKit-leavesGreen
 Ka 0.000000 0.000000 0.000000 
-Kd 0.3529412 0.7686275 0.7137255 
+Kd 0.376 0.502 0.22
+#Kd 0.3529412 0.7686275 0.7137255 
 `;
 
 mtlStrings.fence = 
