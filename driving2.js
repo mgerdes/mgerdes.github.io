@@ -779,7 +779,7 @@ window.onmouseup = function(e) {
 	raycaster.setFromCamera( mouse, camera );
 	
 	var intersects = raycaster.intersectObjects( scene.children );
-	if (intersects.lengths > 0) {
+	if (intersects.length > 0) {
 		obstacles.push(new Obstacle(intersects[0].point, 1.0));
 	}
 };
