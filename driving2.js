@@ -52,6 +52,7 @@ var groundDirtModel = loadModel('groundDirt', true, true);
 var groundDirtRiverModel = loadModel('groundDirtRiver', true, true);
 var groundDirtRiverCornerModel = loadModel('groundDirtRiverCorner', true, true);
 var fenceModel = loadModel('fence', true, true);
+var canoeModel = loadModel('canoe', true, true);
 
 var stoneSmallModels = [];
 for (var i = 1; i < 10; i++) {
@@ -88,12 +89,12 @@ directionalLight2.target.position.set(0.0, 0.0, 0.0);
 scene.add(directionalLight2);
 
 var camera = new THREE.PerspectiveCamera(75, 1280 / 720, 0.1, 1000);
-camera.position.y = 10.0;
+camera.position.y = -10.0;
 camera.position.z = 20.0;
 camera.up.x = 0.0;
 camera.up.y = 0.0;
 camera.up.z = 1.0;
-camera.lookAt(0.0, 2.7, 0.0);
+camera.lookAt(0.0, -2.7, 0.0);
 camera.updateProjectionMatrix();
 
 var NUM_SENSORS = 20;
@@ -766,6 +767,14 @@ for (var i = 0; i < 20; i++) {
 }
 
 {
+	var model = canoeModel.clone();
+	model.position.x = 17.0;
+	model.position.y = 13.0;
+	model.position.z = 1.8;
+	scene.add(model);
+}
+
+{
     var geometry = new THREE.PlaneGeometry(40.0, 20.0);
     var material = new THREE.MeshPhongMaterial({map: carPathTexture});
     //material.specular = new THREE.Color(0.33, 0.33, 0.33);
@@ -790,7 +799,7 @@ window.onmouseup = function(e) {
 };
 
 var GUI = function() {
-    this.speed = 5.0;
+    this.speed = 100.0;
     this.randomness = 0.0;
 };
 
@@ -802,6 +811,8 @@ gui.add(myGUI, 'randomness', 0.0, 1.0);
 var episode_ended = false;
 var state_and_reward = get_state_and_reward();
 var action = get_action(state_and_reward.state, 0.0);
+
+var groundClearColor = new THREE.Color(0.376, 0.502, 0.22);
 
 function animate() {
     for (var times = 0; times < myGUI.speed; times++) {
@@ -833,7 +844,7 @@ function animate() {
         }
 
         if (dont_draw) {
-            renderer.setClearColor(new THREE.Color(0.35, 0.76, 0.71), 1.0);
+            renderer.setClearColor(groundClearColor, 1.0);
             renderer.render(emptyScene, carPathCamera, carPathTexture, true);
         } else {
             renderer.render(carPathScene, carPathCamera, carPathTexture, false);
@@ -844,6 +855,6 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-renderer.setClearColor(new THREE.Color(0.35, 0.76, 0.71), 1.0);
+renderer.setClearColor(groundClearColor, 1.0);
 renderer.render(emptyScene, carPathCamera, carPathTexture, true);
 animate();
