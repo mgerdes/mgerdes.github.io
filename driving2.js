@@ -1,3 +1,26 @@
+var renderer = new THREE.WebGLRenderer();
+renderer.autoClear = false;
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+var carPathRenderer = new THREE.WebGLRenderer();
+carPathRenderer.setSize(1024.0, 1024.0);
+
+var carPathScene = new THREE.Scene();
+var carPathCamera = new THREE.OrthographicCamera(-10.0, 10.0, 10.0, -10.0, -10.0, 10.0); 
+var carPathTexture = new THREE.WebGLRenderTarget(1024.0, 1024.0, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
+
+var emptyScene = new THREE.Scene();
+
+var screenScene = new THREE.Scene();
+var screenCamera = new THREE.OrthographicCamera(-window.innerWidth / 2.0, window.innerWidth / 2.0, window.innerHeight / 2.0, -window.innerHeight / 2.0, -10.0, 10.0); 
+{
+	var geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
+	var material = new THREE.MeshBasicMaterial({map: carPathTexture, side: THREE.DoubleSide});
+	var plane = new THREE.Mesh(geometry, material);
+	screenScene.add(plane);
+}
+
 var mtlLoader = new THREE.MTLLoader();
 var carMaterials = mtlLoader.parse(carMtlString);
 var rock1Materials = mtlLoader.parse(rock1MTLString);
@@ -137,6 +160,7 @@ var Car = function() {
     me.velocity = 2.0;
     me.heading = 0.0;
     me.tire_heading = 0.0;
+	me.stear_direction = 0.0;
     me.position = {x: 0.0, y: 0.0};
     me.did_collide = false;
     me.sensors = [];
@@ -149,17 +173,36 @@ var Car = function() {
     for (var i = 0; i < model.children.length; i++) {
         model.children[i].geometry.rotateX(0.5 * Math.PI);
         model.children[i].geometry.rotateZ(-0.5 * Math.PI);
+		model.children[i].scale.x = 0.1;
+		model.children[i].scale.y = 0.1;
+		model.children[i].scale.z = 0.1;
+		model.children[i].position.x = -0.2;
     }
-    model.scale.x = 0.1;
-    model.scale.y = 0.1;
-    model.scale.z = 0.1;
+		
+	var carPathGeometry = new THREE.BoxGeometry(2.5, 1.5, 1.0);
+	var carPathMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+	var carPathCube = new THREE.Mesh(carPathGeometry, carPathMaterial);
+	
+	var carPathBorderGeometry = new THREE.BoxGeometry(2.8, 1.8, 0.8);
+	var carPathBorderMaterial = new THREE.MeshBasicMaterial( {color: 0x888888} );
+	var carPathBorderCube = new THREE.Mesh(carPathBorderGeometry, carPathBorderMaterial);
+	
+	carPathScene.add(carPathBorderCube);
+	carPathScene.add(carPathCube);
     scene.add(model);
-
-    me.update = function(dt) {
+	
+    me.update = function(dt) {	
+		carPathCube.position.x = me.position.x;
+		carPathCube.position.y = me.position.y;
+		carPathCube.setRotationFromAxisAngle(new THREE.Vector3(0.0, 0.0, 1.0), me.heading);
+		
+		carPathBorderCube.position.x = me.position.x;
+		carPathBorderCube.position.y = me.position.y;
+		carPathBorderCube.setRotationFromAxisAngle(new THREE.Vector3(0.0, 0.0, 1.0), me.heading);
+		
         model.position.x = me.position.x;
         model.position.y = me.position.y;
-        model.setRotationFromAxisAngle(
-            new THREE.Vector3(0.0, 0.0, 1.0), me.heading);
+        model.setRotationFromAxisAngle(new THREE.Vector3(0.0, 0.0, 1.0), me.heading);
 
         if (me.did_collide) {
             me.did_collide = false;
@@ -168,6 +211,21 @@ var Car = function() {
             me.heading = 0.0;
             me.tire_heading = 0.0;
         }
+		
+		var wanted_tire_heading = me.stear_direction * 0.5;
+		if (me.tire_heading < wanted_tire_heading) {
+			me.tire_heading += 2.0 * dt;
+			if (me.tire_heading > wanted_tire_heading) {
+				me.tire_heading = wanted_tire_heading;
+			}
+		}
+		
+		if (me.tire_heading > wanted_tire_heading) {
+			me.tire_heading -= 2.0 * dt;
+			if (me.tire_heading < wanted_tire_heading) {
+				me.tire_heading = wanted_tire_heading;
+			}
+		}
 
         // me.velocity = me.velocity + me.acceleration * dt;
         me.position.x = me.position.x + me.velocity * Math.cos(me.heading) * dt;
@@ -313,12 +371,14 @@ var get_state_and_reward = function() {
             state += 1;
         }
     }
+	state *= 20;
+	state += 20 * Math.floor((car.tire_heading + 2.0) / 4.0);
 
     return {state: state, reward: reward};
 };
 
 var Q = [];
-for (var i = 0; i < 3 * (1 << (N0 + N1)); i++) {
+for (var i = 0; i < 3 * 20 * (1 << (N0 + N1)); i++) {
     Q[i] = 0.0;
 }
 
@@ -348,14 +408,12 @@ var update_value = function(
 };
 
 var do_action = function(action) {
-    var TURN_A = 0.5;
-
     if (action == 0) {
-        car.tire_heading = 0.0;
+        car.stear_direction = 0.0;
     } else if (action == 1) {
-        car.tire_heading = TURN_A;
+        car.stear_direction = 1.0;
     } else if (action == 2) {
-        car.tire_heading = -TURN_A;
+        car.stear_direction = -1.0;
     } else {
         console.log(action);
     }
@@ -386,14 +444,10 @@ clear_obstacles_button.onclick = function(e) {
 };
 */
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
 var episode_ended = false;
 var state_and_reward = get_state_and_reward();
 var action = get_action(state_and_reward.state, 0.1);
-var speed = 10;
+var speed = 2;
 var epsilon = 0.0;
 
 var cliffModel = null;
@@ -409,6 +463,7 @@ var cliffModel = null;
     cliffModel.scale.z = 0.4;
 }
 
+/*
 for (var i = 0; i < 6; i++) {
     var model = cliffModel.clone();
     model.position.x = -13.0;
@@ -423,16 +478,59 @@ for (var i = 0; i < 6; i++) {
     model.position.y = -12.0 + 4 * i;
     scene.add(model);
 }
+*/
+
+{
+	var geometry = new THREE.BoxGeometry(20.0, 0.5, 0.5);
+	var material = new THREE.MeshLambertMaterial( {color: 0x00ff00, opacity: 0.7, transparent: false} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.position.y = 10.0;
+	scene.add(cube);
+}
+
+{
+	var geometry = new THREE.BoxGeometry(20.0, 0.5, 0.5);
+	var material = new THREE.MeshLambertMaterial( {color: 0x00ff00, opacity: 0.7, transparent: false} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.position.y = -10.0;
+	scene.add(cube);
+}
+
+{
+	var geometry = new THREE.BoxGeometry(0.5, 20.0, 0.5);
+	var material = new THREE.MeshLambertMaterial( {color: 0x00ff00, opacity: 0.7, transparent: false} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.position.x = 10.0;
+	scene.add(cube);
+}
+
+{
+	var geometry = new THREE.BoxGeometry(0.5, 20.0, 0.5);
+	var material = new THREE.MeshLambertMaterial( {color: 0x00ff00, opacity: 0.7, transparent: false} );
+	var cube = new THREE.Mesh(geometry, material);
+	cube.position.x = -10.0;
+	scene.add(cube);
+}
+
+{
+	var geometry = new THREE.PlaneGeometry(20.0, 20.0);
+	var material = new THREE.MeshLambertMaterial({map: carPathTexture});
+	var ground = new THREE.Mesh(geometry, material);
+	scene.add(ground);
+}
 
 function animate() {
     for (var times = 0; times < speed; times++) {
         do_action(action);
         car.update(0.016);
+		
+		var dont_draw = false;
 
         var state_and_reward_next = get_state_and_reward();
         var action_next = get_action(state_and_reward_next.state, epsilon);
 
         if (episode_ended) {
+			dont_draw = true;
             episode_ended = false;
         } else {
             update_value(
@@ -444,12 +542,20 @@ function animate() {
         action = action_next;
 
         if (car.did_collide) {
+			dont_draw = true;
             episode_ended = true;
             time_since_collision = 0;
-        }
+		}
+		
+		if (dont_draw) {
+			renderer.render(emptyScene, carPathCamera, carPathTexture, true);
+		} else {
+			renderer.render(carPathScene, carPathCamera, carPathTexture, false);
+		}
     }
 
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+	renderer.render(scene, camera);
+	//renderer.render(screenScene, screenCamera);
 }
 animate();
