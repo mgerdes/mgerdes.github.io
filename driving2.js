@@ -52,6 +52,7 @@ var groundDirtModel = loadModel('groundDirt', true, true);
 var groundDirtRiverModel = loadModel('groundDirtRiver', true, true);
 var groundDirtRiverCornerModel = loadModel('groundDirtRiverCorner', true, true);
 var fenceModel = loadModel('fence', true, true);
+var canoeModel = loadModel('canoe', true, true);
 
 var stoneSmallModels = [];
 for (var i = 1; i < 10; i++) {
@@ -88,12 +89,12 @@ directionalLight2.target.position.set(0.0, 0.0, 0.0);
 scene.add(directionalLight2);
 
 var camera = new THREE.PerspectiveCamera(75, 1280 / 720, 0.1, 1000);
-camera.position.y = 10.0;
+camera.position.y = -10.0;
 camera.position.z = 20.0;
 camera.up.x = 0.0;
 camera.up.y = 0.0;
 camera.up.z = 1.0;
-camera.lookAt(0.0, 2.7, 0.0);
+camera.lookAt(0.0, -2.7, 0.0);
 camera.updateProjectionMatrix();
 
 var NUM_SENSORS = 20;
@@ -186,6 +187,10 @@ var Obstacle = function(position, radius) {
     model.castShadow = true;
     model.receiveShadow = true;
     scene.add(model);
+
+    me.remove = function() {
+        scene.remove(model);
+    };
 };
 
 var obstacles = [];
@@ -766,6 +771,14 @@ for (var i = 0; i < 20; i++) {
 }
 
 {
+	var model = canoeModel.clone();
+	model.position.x = 17.0;
+	model.position.y = 13.0;
+	model.position.z = 1.8;
+	scene.add(model);
+}
+
+{
     var geometry = new THREE.PlaneGeometry(40.0, 20.0);
     var material = new THREE.MeshPhongMaterial({map: carPathTexture});
     //material.specular = new THREE.Color(0.33, 0.33, 0.33);
@@ -790,14 +803,21 @@ window.onmouseup = function(e) {
 };
 
 var GUI = function() {
-    this.speed = 5.0;
+    this.speed = 10.0;
     this.randomness = 0.0;
+    this.clearObstacles = function() {
+        for (var i = 0; i < obstacles.length; i++) {
+            obstacles[i].remove();
+        }
+        obstacles.length = 0;
+    };
 };
 
 var myGUI = new GUI();
 var gui = new dat.GUI();
 gui.add(myGUI, 'speed', 1, 1000);
 gui.add(myGUI, 'randomness', 0.0, 1.0);
+gui.add(myGUI, 'clearObstacles');
 
 var episode_ended = false;
 var state_and_reward = get_state_and_reward();
