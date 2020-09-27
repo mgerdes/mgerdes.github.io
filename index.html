@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Portfolio</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    <body style="margin-left:50px; margin-right:50px;">
+        <h1>Michael Gerdes Portfolio</h1>
+        <div class="w3-light-grey" style="padding-right:20px;padding-left:20px;padding-bottom:20px;border:1px solid #AAAAAA;">
+            <h2>Minigolf</h2>
+            <img src="https://i.imgur.com/TBlXedl.gif" width=500/>
+            </br>
+            </br>
+            Link to play (Works best in Chrome): <a href="http://mgerdes.github.io/minigolf.html">http://mgerdes.github.io/minigolf.html</a>
+            </br>
+            Source code: <a href="http://github.com/mgerdes/minigolf">http://github.com/mgerdes/minigolf</a>
+            <ul>
+                <li>
+                    This is a (mostly) from scratch minigolf game I wrote in C. 
+                </li>
+                <li>
+                    Used the <a href="https://github.com/floooh/sokol">Sokol</a> libraries to create a cross platform application with 3D graphics and audio. This allowed using Emscripten to compile into JavaScript and make it playable at the link above.
+                </li>
+                <li>
+                    Wrote the Physics code to handle collision detection and collision response for the golf ball.
+                </li>
+                <li>
+                    Used <a href="https://github.com/ocornut/imgui">ImGui</a> to create in games tools for fast iteration. Also created an in game-editor that can be used to modify the terrain of a hole and then quickly play to get fast feedback. The game-editor can also run Scheme scripts to generate the points and faces of more interesting models.
+                </li>
+                <img src="https://i.imgur.com/fCoKT2e.gif" width=500/>
+                <li>
+                    Used the library Lightmapper to generate lightmaps for the terrain and also xatlas to generate lightmap UVs. These lightmaps are then baked into the files for the courses. It can also interpolate between multiple samples to create lightmaps for some moving objects.
+                </li>
+                <img src="https://i.imgur.com/ADw5kCw.gif" width=500/>
+                <img src="https://i.imgur.com/tUJyHRk.gif" width=500/>
+            </ul>
+        </div>
+        <div class="w3-light-grey" style="margin-top:50px;padding-right:20px;padding-left:20px;padding-bottom:20px;border:1px solid #AAAAAA;">
+            <h2>RTS Game (WIP)</h2>
+            <video width="1000px" controls>
+                <source src="https://i.imgur.com/tDwBHuo.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            </br />
+            <img src="https://i.imgur.com/LHWKxXM.gif" width=1000px/>
+            </br />
+            <ul>
+                <li>
+                    This is the beginnings of a 2D, isometric-style, RTS game I started making.  I've always loved RTS games so wanted to try my hand at understanding the technical side of making them.
+                </li>
+                <li>
+                    Wrote all the gameplay code (mostly) from scratch in C and graphics code is written from scratch in OpenGL.
+                </li>
+                <li>
+                    Used the <a href="https://github.com/slembcke/Chipmunk2D">Chipmunk2D</a> physics engine.
+                </li>
+                <li>
+                    Used a freely available RTS asset pack from here: <a href="https://defold.com/assets/warbattlesassetpack/">https://defold.com/assets/warbattlesassetpack/</a>.
+                </li>
+            </ul>
+        </div>
+        <div class="w3-light-grey" style="margin-top:50px;padding-right:20px;padding-left:20px;padding-bottom:20px;border:1px solid #AAAAAA;">
+            <h2>Tank Breaker (WIP)</h2>
+            <video width="400px" controls>
+                <source src="https://i.imgur.com/exiQpt1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <ul>
+                <li>
+                    This is a 2D Brick Breaker like game that I started making for Android phones. 
+                </li>
+                <li>
+                    Wrote all the gameplay code (mostly) from scratch in C and graphics code is written from scratch in OpenGL.
+                </li>
+                <li>
+                    Used the <a href="https://github.com/slembcke/Chipmunk2D">Chipmunk2D</a> physics engine.
+                </li>
+                <li>
+                    Used freely available assets from here: <a href="https://kenney.nl/">https://kenney.nl/</a>
+                </li>
+            </ul>
+        </div>
+        <div class="w3-light-grey" style="margin-top:50px;margin-bottom:50px;padding-right:20px;padding-left:20px;padding-bottom:20px;border:1px solid #AAAAAA;">
+            <h2>Physics Engine</h2>
+            <img src="https://i.imgur.com/EQMZJTh.gif" width=500/>
+            </br>
+            </br>
+            Source code: <a href="http://github.com/mgerdes/PhysicsEngine">http://github.com/mgerdes/PhysicsEngine</a>
+            <ul>
+                <li>
+                    This is a 3D Physics Engine and Renderer I made using C++ / OpenGL. 
+                </li>
+                <li>
+                    Supports Rigid Body Boxes and Spheres.
+                </li>
+                <li>
+                    Wrote graphics code and shaders to create the dynamic shadows.
+                </li>
+            </ul>
+        </div>
+        <div class="w3-light-grey" style="margin-top:50px;margin-bottom:50px;padding-right:20px;padding-left:20px;padding-bottom:20px;border:1px solid #AAAAAA;">
+            <h2>Water Simulation</h2>
+            <video width="500px" controls>
+                <source src="https://imgur.com/3vDy2Qw.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            </br>
+            </br>
+            Source code: <a href="http://github.com/mgerdes/water-simulation">http://github.com/mgerdes/water-simulation</a>
+            <ul>
+                <li>
+                    This is a 3D water simulation I made using C++ / OpenGL. 
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>
